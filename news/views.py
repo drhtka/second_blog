@@ -16,7 +16,7 @@ def new_single(request, pk):
     """
 
     new = get_object_or_404(News, id=pk)
-    #comment = Coments.objects.filter(new=pk, moderation=True)
+    comment = Coments.objects.filter(new=pk, moderation=True)
     if request.method == 'POST':
         form = CommentForm(request.POST)
         if form.is_valid: # нам нужно присвоить к тому user который сейчас на сайте добавил коментарий
@@ -28,5 +28,5 @@ def new_single(request, pk):
     else:
         form = CommentForm()
     return render(request, 'new_singl.html', {'new': new,
-                                              #'comment': comment,
+                                              'comment': comment,
                                               'form': form})
