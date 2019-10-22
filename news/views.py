@@ -2,6 +2,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from news.models import News, Coments
 from news.forms import CommentForm
+from datetime import datetime, timedelta
 
 def news_list(request):
     """Вывод всех новостей
@@ -30,3 +31,20 @@ def new_single(request, pk):
     return render(request, 'new_singl.html', {'new': new,
                                               'comment': comment,
                                               'form': form})
+
+def news_filter(request, pk):
+    """Фильтр статей по дате
+    """
+    news = News.objects.all()
+    if pk == 1:
+        now = datetime.now() - timedelta(minutes=60*24*7)#определим сегодняшнюю дату() отнимем в  минуты*сутки дни недели
+        news = news.filter(created__gte=now)# все наши статьи, по полю created  определим созданные наши статьи
+
+    elif pk == 2:
+        now = datetime.now() - timedelta(minutes=60*24*30)
+        news = news.filter(created__gte=now)
+
+    elif pk == 3:
+        news = news
+
+    return render(request, 'news_list.html', {'news': news})
