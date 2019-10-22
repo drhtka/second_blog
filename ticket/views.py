@@ -1,28 +1,14 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
+from django.urls import reverse
 from django.views.generic import View
 from django.views.generic.base import TemplateView
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic.list import ListView
 
 from .models import Ticket
 from .forms import AddTicketForms
-"""
-class MyView(View):
-
-    def get(self, request, *args, **kwargs):
-        return HttpResponse('Class of Django')
-
-class MyTemplateView(TemplateView):
-
-    template_name = 'add_ticket.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(MyTemplateView, self).get_context_data(**kwargs)
-        context['text'] = 'Hi world!'
-        return context
-        
-""" # test
 
 class AddTicket(CreateView):
     """Добавление тикета
@@ -40,3 +26,23 @@ class AddTicket(CreateView):
     def succes_url(self):
         return redirect('/add-ticket/')# куда редиректить когда мы сделам что либо на наш url
 
+class ListTicket(ListView):
+    """Список тикетов пользователя
+    """
+    model = Ticket
+    queryset = Ticket.objects.all()
+    context_object_name = 'tickets'
+    template_name = 'list-ticket.html'
+
+    def get_queryset(self):
+        return Ticket.objects.filter(user=self.request.user)# выводит тикет данного пользователя
+
+class UpdateTicket(UpdateView):
+    """Редактирование тикета
+    """
+    model = Ticket
+    form_class = AddTicketForms
+    template_name = 'update_ticket.html' # можно было list-ticket
+
+    def get_success_url(self):
+        return reverse('list-ticket')
