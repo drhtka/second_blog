@@ -1,6 +1,6 @@
 **Blog**
 
-- pyrhon 3.6
+- python 3.6
 - django 2
 - lite sql
 
